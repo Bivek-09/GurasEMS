@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guras EMS - Login</title>
+
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            maroon: '#741123',
+            maroonHover: '#600E1C',
+            lightRose: '#FDF2F4',
+            softPink: '#FCE7EB',
+            danger: '#B3261E'
+          }
+        },
+        fontFamily: {
+          sans: ['"Plus Jakarta Sans"', 'sans-serif']
+        },
+        boxShadow: {
+          card: '0 1px 2px rgba(15,23,42,.04), 0 18px 44px -28px rgba(15,23,42,.22)',
+          control: '0 1px 2px rgba(15,23,42,.05)'
+        }
+      }
+    }
+  };
+</script>
+
+<!-- Reusable components: one definition per repeated pattern -->
+<style type="text/tailwindcss">
+  @layer components {
+    .field-label {
+      @apply mb-2 block text-[13px] font-semibold leading-none text-slate-700;
+    }
+
+    /* 16px prevents iOS from zooming the viewport on focus. */
+    .field-input {
+      @apply block w-full rounded-xl border border-slate-200 bg-white
+             py-3.5 pl-11 pr-4 text-[16px] leading-6 text-slate-800
+             shadow-control placeholder:text-slate-500
+             transition-[border-color,box-shadow] duration-150
+             focus:border-brand-maroon focus:outline-none focus:ring-4 focus:ring-brand-maroon/10;
+    }
+
+    .field-input.has-trailing {
+      @apply pr-11;
+    }
+
+    .field-input[aria-invalid="true"] {
+      @apply border-brand-danger focus:border-brand-danger focus:ring-brand-danger/10;
+    }
+
+    .field-icon {
+      @apply pointer-events-none absolute inset-y-0 left-3.5 flex items-center text-slate-400;
+    }
+
+    .field-error {
+      @apply mt-2 text-[12.5px] font-medium leading-4 text-brand-danger;
+    }
+
+    .btn-primary {
+      @apply flex w-full items-center justify-center rounded-xl
+             bg-brand-maroon px-5 py-3.5 text-[15px] font-semibold tracking-[0.01em]
+             text-white shadow-sm shadow-brand-maroon/20
+             transition-[background-color,transform,box-shadow] duration-150
+             hover:bg-brand-maroonHover
+             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-maroon focus-visible:ring-offset-2
+             active:scale-[.99];
+    }
+
+    .btn-social {
+      @apply flex h-12 w-full items-center justify-center gap-2.5 rounded-xl
+             border border-slate-200 bg-white text-slate-600 shadow-control
+             transition-[background-color,border-color,transform] duration-150
+             hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700
+             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-maroon focus-visible:ring-offset-2
+             active:scale-[.98];
+    }
+  }
+</style>
+
+<style data-purpose="custom-styling">
+  :root {
+    --brand-maroon: #741123;
+    --brand-danger: #B3261E;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  input {
+    user-select: text;
+  }
+
+  /* Keyboard focus must stay visible even where a component draws its own ring. */
+  :where(a, button):focus-visible {
+    outline: 2px solid var(--brand-maroon);
+    outline-offset: 2px;
+  }
+
+  .btn-primary:focus-visible,
+  .btn-social:focus-visible {
+    outline: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      transition-duration: .01ms !important;
+    }
+  }
+</style>
+</head>
+
+<body class="flex min-h-screen justify-center bg-slate-100 antialiased sm:items-center sm:px-6 sm:py-10">
+
+<main class="w-full max-w-[440px] bg-white sm:rounded-2xl sm:border sm:border-slate-200/80 sm:shadow-card">
+
+  <div class="px-6 py-6 sm:px-9 sm:py-9">
+
+    <!-- Navigation -->
+    <nav aria-label="Navigation">
+      <button aria-label="Go back" id="backButton" type="button"
+              class="-ml-2.5 flex h-11 w-11 items-center justify-center rounded-full text-slate-700 transition-colors duration-150 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200">
+        <svg class="h-6 w-6 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"></path>
+        </svg>
+      </button>
+    </nav>
+
+    <!-- Screen Title Header -->
+    <header class="mb-7 mt-1" data-purpose="screen-title">
+      <h1 class="text-[26px] font-bold leading-tight tracking-[-0.02em] text-slate-900">Welcome Back</h1>
+      <p class="mt-2 text-[14.5px] leading-6 text-slate-500">Sign in to your Guras EMS account</p>
+    </header>
+
+    <div class="space-y-7">
+
+      <!-- LoginForm -->
+      <form id="loginForm" class="space-y-5" data-purpose="login-form" novalidate>
+
+        <!-- Student ID -->
+        <div>
+          <label class="field-label" for="studentId">Student ID</label>
+          <div class="relative">
+            <span class="field-icon">
+              <svg class="h-5 w-5 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path>
+              </svg>
+            </span>
+            <input class="field-input" id="studentId" name="studentId" type="text"
+                   placeholder="Enter your student ID"
+                   autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false"
+                   data-error="Enter your student ID." required>
+          </div>
+          <p class="field-error hidden" id="studentId-error" role="alert"></p>
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label class="field-label" for="password">Password</label>
+          <div class="relative">
+            <span class="field-icon">
+              <svg class="h-5 w-5 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"></path>
+              </svg>
+            </span>
+            <input class="field-input has-trailing" id="password" name="password" type="password"
+                   placeholder="Enter your password" autocomplete="current-password"
+                   data-error="Enter your password." required>
+            <button aria-label="Show password" id="togglePassword" type="button"
+                    class="absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-r-xl text-slate-400 transition-colors duration-150 hover:text-slate-600">
+              <svg class="h-5 w-5 stroke-[1.8]" fill="none" id="eyeIcon" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+            </button>
+          </div>
+          <p class="field-error hidden" id="password-error" role="alert"></p>
+
+          <div class="mt-3 flex justify-end">
+            <a class="text-[13px] font-semibold text-brand-maroon transition-colors duration-150 hover:text-brand-maroonHover hover:underline" href="#">Forgot Password?</a>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <div>
+          <button class="btn-primary" type="submit">Sign In</button>
+        </div>
+      </form>
+      <!-- END: LoginForm -->
+
+      <!-- SocialOptions -->
+      <section data-purpose="social-login">
+        <div class="relative flex items-center">
+          <span class="h-px w-full bg-slate-200"></span>
+          <span class="whitespace-nowrap bg-white px-3 text-[12px] font-medium text-slate-500">or continue with</span>
+          <span class="h-px w-full bg-slate-200"></span>
+        </div>
+
+        <div class="mt-4 grid grid-cols-2 gap-3">
+          <button aria-label="Sign in with Google" class="btn-social" type="button">
+            <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.65v3.03h3.88c2.27-2.09 3.665-5.17 3.665-9.12z" fill="#4285F4"></path>
+              <path d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.03c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.13C3.27 21.39 7.35 24 12 24z" fill="#34A853"></path>
+              <path d="M5.28 14.29c-.25-.72-.38-1.49-.38-2.29s.13-1.57.38-2.29V6.57H1.26C.46 8.16 0 9.97 0 12s.46 3.84 1.26 5.43l4.02-3.14z" fill="#FBBC05"></path>
+              <path d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.27 2.61 1.26 6.57l4.02 3.14c.95-2.83 3.6-4.96 6.72-4.96z" fill="#EA4335"></path>
+            </svg>
+            <span class="text-[13.5px] font-semibold text-slate-700">Google</span>
+          </button>
+
+          <button aria-label="Sign in with Microsoft" class="btn-social" type="button">
+            <svg class="h-5 w-5 shrink-0" viewBox="0 0 21 21" aria-hidden="true">
+              <rect fill="#f25022" height="9" width="9" x="1" y="1"></rect>
+              <rect fill="#7fba00" height="9" width="9" x="11" y="1"></rect>
+              <rect fill="#00a4ef" height="9" width="9" x="1" y="11"></rect>
+              <rect fill="#ffb900" height="9" width="9" x="11" y="11"></rect>
+            </svg>
+            <span class="text-[13.5px] font-semibold text-slate-700">Microsoft</span>
+          </button>
+        </div>
+      </section>
+      <!-- END: SocialOptions -->
+
+      <!-- SupportFooter -->
+      <aside class="flex items-start gap-3.5 rounded-xl border border-slate-200 bg-slate-50 p-3.5" data-purpose="help-box">
+        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-softPink">
+          <svg class="h-5 w-5 stroke-[1.8] text-brand-maroon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"></path>
+          </svg>
+        </span>
+        <div class="min-w-0">
+          <h2 class="text-[13px] font-semibold leading-tight text-slate-800">Need Help?</h2>
+          <p class="mt-1 text-[12.5px] leading-5 text-slate-500">Contact your school administration for login details.</p>
+        </div>
+      </aside>
+      <!-- END: SupportFooter -->
+
+    </div>
+  </div>
+</main>
+
+<script data-purpose="interactive-scripts">
+  (function () {
+    'use strict';
+
+    var form       = document.getElementById('loginForm');
+    var studentId  = document.getElementById('studentId');
+    var password   = document.getElementById('password');
+    var toggleBtn  = document.getElementById('togglePassword');
+    var eyeIcon    = document.getElementById('eyeIcon');
+    var backButton = document.getElementById('backButton');
+
+    var fields = [studentId, password];
+
+    /* ── Password visibility ──────────────────────────────── */
+    var EYE_ON = '<path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>';
+    var EYE_OFF = '<path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"></path>';
+
+    toggleBtn.addEventListener('click', function () {
+      var revealed = password.type === 'password';
+      password.type = revealed ? 'text' : 'password';
+      eyeIcon.innerHTML = revealed ? EYE_OFF : EYE_ON;
+      toggleBtn.setAttribute('aria-label', revealed ? 'Hide password' : 'Show password');
+    });
+
+    /* ── Validation ───────────────────────────────────────── */
+    function setError(input, message) {
+      var error = document.getElementById(input.id + '-error');
+
+      if (message) {
+        input.setAttribute('aria-invalid', 'true');
+        input.setAttribute('aria-describedby', error.id);
+        error.textContent = message;
+        error.classList.remove('hidden');
+      } else {
+        input.removeAttribute('aria-invalid');
+        input.removeAttribute('aria-describedby');
+        error.textContent = '';
+        error.classList.add('hidden');
+      }
+    }
+
+    function validate(input) {
+      var valid = input.value.trim().length > 0;
+      setError(input, valid ? null : input.dataset.error);
+      return valid;
+    }
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      var firstInvalid = null;
+      fields.forEach(function (input) {
+        if (!validate(input) && firstInvalid === null) firstInvalid = input;
+      });
+
+      if (firstInvalid !== null) {
+        firstInvalid.focus();
+        return;
+      }
+
+      // Authentication endpoint is not wired up yet.
+    });
+
+    // Clear an error as soon as the user starts correcting the field.
+    fields.forEach(function (input) {
+      input.addEventListener('input', function () {
+        if (input.getAttribute('aria-invalid') === 'true' && input.value.trim()) {
+          setError(input, null);
+        }
+      });
+    });
+
+    /* ── Navigation ───────────────────────────────────────── */
+    backButton.addEventListener('click', function () {
+      window.history.back();
+    });
+  })();
+</script>
+
+</body>
+</html>

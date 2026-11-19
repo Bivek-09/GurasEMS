@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Splash canvas, matching AppPalette.background (#FFF9F4). Used for the
+         window background and status bar until Flutter draws its first frame. -->
+    <color name="splash_background">#FFF9F4</color>
+</resources>
